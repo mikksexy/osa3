@@ -57,7 +57,7 @@ app.get('/api/persons', (req, res) => {
   })
 })
 
-app.get('/api/persons/:id', (req, res) => {
+/*app.get('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
   const person = persons.find(person => person.id === id)
   if (person) {
@@ -65,6 +65,12 @@ app.get('/api/persons/:id', (req, res) => {
   } else {
     res.status(404).end()
   }
+})*/
+
+app.get('/api/persons/:id', (req, res) => {
+  Person.findById(req.params.id).then(person => {
+    res.json(person)
+  })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -75,15 +81,15 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 app.post('/api/persons', (req, res) => {
-  const person = req.body
+  const body = req.body
 
-  if (!person.name) {
+  if (body.name === undefined) {
     return res.status(400).json({
       error: 'name missing'
     })
   }
 
-  if (!person.number) {
+  /*if (!person.number) {
     return res.status(400).json({
       error: 'number missing'
     })
@@ -93,13 +99,19 @@ app.post('/api/persons', (req, res) => {
     return res.status(400).json({
       error: 'name must be unique'
     })
-  }
+  }*/
 
-  person.id = Math.floor(Math.random(0, 1000) * 100)
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  })
+  //person.id = Math.floor(Math.random(0, 1000) * 100)
 
-  persons = persons.concat(person)
+  //persons = persons.concat(person)
 
-  res.json(person)
+  person.save().then(savedPerson => {
+    res.json(savedPerson)
+  })
 })
 
 const PORT = process.env.PORT || 3001
