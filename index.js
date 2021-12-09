@@ -55,7 +55,7 @@ let persons = [
   })
 
 app.get('/info', (req, res) => {
-  const people = persons.length
+  const people = Person.countDocuments({})
   const date = new Date()
   res.send(`Phonebook has info for  ${people} people <br> <br> ${date}`)
 })
