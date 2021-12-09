@@ -54,10 +54,13 @@ let persons = [
     res.send('<h1>Hello World!</h1>')
   })
 
-app.get('/info', (req, res) => {
-  const people = Person.estimatedDocumentCount()
+app.get('/info', (req, res, next) => {
   const date = new Date()
-  res.send(`Phonebook has info for  ${people} people <br> <br> ${date}`)
+  Person.estimatedDocumentCount()
+  .then(people => {
+    res.send(`Phonebook has info for  ${people} people <br> <br> ${date}`)
+  })
+  .catch(error => next(error))
 })
 
 app.get('/api/persons', (req, res) => {
