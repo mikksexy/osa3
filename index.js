@@ -13,7 +13,7 @@ app.use(express.static('build'))
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id'})
+    return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
   }
@@ -29,17 +29,17 @@ morgan.token('data', (req) => {
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
 
-  app.get('/', (req, res) => {
-    res.send('<h1>Hello World!</h1>')
-  })
+app.get('/', (req, res) => {
+  res.send('<h1>Hello World!</h1>')
+})
 
 app.get('/info', (req, res, next) => {
   const date = new Date()
   Person.estimatedDocumentCount()
-  .then(people => {
-    res.send(`Phonebook has info for  ${people} people <br> <br> ${date}`)
-  })
-  .catch(error => next(error))
+    .then(people => {
+      res.send(`Phonebook has info for  ${people} people <br> <br> ${date}`)
+    })
+    .catch(error => next(error))
 })
 
 app.get('/api/persons', (req, res) => {
@@ -56,16 +56,14 @@ app.get('/api/persons/:id', (req, res, next) => {
       } else {
         res.status(404).end()
       }
-  })
-  .catch(error => next(error))
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-  .then(result => {
-    res.status(204).end()
-  })
-  .catch(error => next(error))
+    .then(res.status(204).end())
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (req, res, next) => {
@@ -79,7 +77,7 @@ app.post('/api/persons', (req, res, next) => {
   person.save().then(savedPerson => {
     res.json(savedPerson)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
